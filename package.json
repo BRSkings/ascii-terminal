@@ -1,0 +1,72 @@
+{
+  "name": "ascii-life-terminal",
+  "version": "1.0.0",
+  "description": "A fully functional terminal emulator with a living ASCII Life background",
+  "main": "main.js",
+  "author": "ASCII Life Terminal",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build:renderer": "esbuild renderer/renderer.js --bundle --outfile=renderer/bundle.js --format=iife --target=chrome110 --log-level=warning",
+    "start": "npm run build:renderer && electron .",
+    "rebuild": "electron-rebuild -f -w node-pty",
+    "dist": "npm run build:renderer && electron-builder --win --x64",
+    "verify": "node scripts/verify.js"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/xterm": "6.0.0",
+    "node-pty": "1.1.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "4.2.1",
+    "electron": "45.4.1",
+    "electron-builder": "26.18.0",
+    "esbuild": "0.28.2",
+    "playwright-core": "1.65.1"
+  },
+  "build": {
+    "appId": "com.asciilife.terminal",
+    "productName": "ASCII Life Terminal",
+    "npmRebuild": false,
+    "asarUnpack": [
+      "node_modules/node-pty/prebuilds/**/*"
+    ],
+    "directories": {
+      "app": ".",
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "renderer/**/*",
+      "vendor/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ASCII Life Terminal"
+    },
+    "portable": {
+      "artifactName": "ASCII-Life-Terminal-Portable.exe"
+    },
+    "artifactName": "ASCII-Life-Terminal-Setup.exe"
+  }
+}
